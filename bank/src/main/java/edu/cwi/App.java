@@ -1,5 +1,9 @@
 package edu.cwi;
 
+import io.javalin.Javalin;
+import io.javalin.http.staticfiles.Location;
+
+
 /**
  * Hello world!
  *
@@ -8,6 +12,8 @@ public class App
 {
     public static void main( String[] args )
     {
-        System.out.println( "Hello World!" );
+        Javalin.create(config -> {
+            config.staticFiles.add("/public", Location.CLASSPATH);
+        }).start(7070);
     }
 }
