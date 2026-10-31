@@ -1,6 +1,8 @@
 package edu.cwi;
 
 import io.javalin.Javalin;
+import static io.javalin.apibuilder.ApiBuilder.crud;
+import static io.javalin.apibuilder.ApiBuilder.path;
 import io.javalin.http.staticfiles.Location;
 
 
@@ -13,6 +15,8 @@ public class App
             config.staticFiles.add("/public", Location.CLASSPATH);
             config.routes.get("/account", ctx -> {ctx.redirect("/account.html");});
             config.routes.get("/logout", ctx -> {ctx.redirect("/");});
-        }).start(7070);   
+            config.routes.apiBuilder(() -> {path("transactions", () -> {crud("{id}", new TransactionsController());});});
+        }).start(7070);
+        
     }
 }
