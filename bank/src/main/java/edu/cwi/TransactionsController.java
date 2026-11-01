@@ -1,55 +1,19 @@
 package edu.cwi;
 
+import java.util.List;
+import java.util.Map;
+
 import io.javalin.apibuilder.CrudHandler;
 import io.javalin.http.Context;
-import static j2html.TagCreator.attrs;
-import static j2html.TagCreator.body;
-import static j2html.TagCreator.button;
-import static j2html.TagCreator.form;
-import static j2html.TagCreator.h1;
-import static j2html.TagCreator.head;
-import static j2html.TagCreator.html;
-import static j2html.TagCreator.link;
-import static j2html.TagCreator.main;
-import static j2html.TagCreator.title;
+
 public class TransactionsController implements CrudHandler {
+
+    private final List<?> transactions = List.of();
 
     @Override
     public void getAll(Context ctx) {
-		ctx.html(
-        html(
-            head(
-                title("Bank"),
-                link().withRel("stylesheet").withHref("/css/main.css")
-            ),
-            body(
-                main(attrs("#main.content"),
-                    h1("Transactions"),
-
-                    form()
-                        .withMethod("post")
-                        .withAction("/transactions")
-                        .with(
-                            button("Create")
-                        ),
-
-                    form()
-                        .withMethod("post")
-                        .withAction("/transactions/1")
-                        .with(
-                            button("Update")
-                        ),
-
-                    form()
-                        .withMethod("post")
-                        .withAction("/transactions/1")
-                        .with(
-                            button("Delete")
-                        )
-                )
-            )
-        ).render()
-    );
+        ctx.render("jte/transactions.jte", Map.of("transactions", transactions));
+          
     }
 
     @Override
