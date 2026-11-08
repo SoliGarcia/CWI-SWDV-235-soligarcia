@@ -12,7 +12,7 @@ public class TransactionsController implements CrudHandler {
 
     @Override
     public void getAll(Context ctx) {
-        ctx.render("jte/transactions.jte", Map.of("transactions", transactions));
+        ctx.render("jte/accountPage.jte", Map.of("title", "Account Transactions", "name", "John Public", "balance", "500.00", "transactions", transactions));
           
     }
 
