@@ -1,6 +1,5 @@
 package edu.cwi;
 
-import java.util.List;
 import java.util.Map;
 
 import io.javalin.apibuilder.CrudHandler;
@@ -8,16 +7,34 @@ import io.javalin.http.Context;
 
 public class TransactionsController implements CrudHandler {
 
-    private final List<?> transactions = List.of();
+    private static final UserAccount sampleAccount = new UserAccount(
+        "demo-user",
+        "John Public",
+        AppRole.CUSTOMER,
+        500.00,
+        Map.of("1", "Deposited $500.00", "2", "Paid rent -$125.00")
+    );
 
     @Override
     public void getAll(Context ctx) {
-        ctx.render("jte/accountPage.jte", Map.of("title", "Account Transactions", "name", "John Public", "balance", "500.00", "transactions", transactions));
-          
+        ctx.render("jte/accountPage.jte", Map.of(
+            "title", "Account Transactions",
+            "account", sampleAccount,
+            "name", sampleAccount.name(),
+            "balance", sampleAccount.toMoney(),
+            "transactions", sampleAccount.transactions()
+        ));
     }
 
     @Override
     public void getOne(Context ctx, String id) {
+        ctx.render("jte/accountPage.jte", Map.of(
+            "title", "Account Transactions",
+            "account", sampleAccount,
+            "name", sampleAccount.name(),
+            "balance", sampleAccount.toMoney(),
+            "transactions", sampleAccount.transactions()
+        ));
     }
 
     @Override
@@ -33,7 +50,5 @@ public class TransactionsController implements CrudHandler {
     @Override
     public void delete(Context ctx, String id) {
         ctx.redirect("/transactions");
-
     }
-
 }
