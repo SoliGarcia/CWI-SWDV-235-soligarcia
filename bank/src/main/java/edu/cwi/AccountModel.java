@@ -1,4 +1,5 @@
-package edu.cwi.models;
+package edu.cwi;
+
 
 import java.util.ArrayList;
 import java.util.List;

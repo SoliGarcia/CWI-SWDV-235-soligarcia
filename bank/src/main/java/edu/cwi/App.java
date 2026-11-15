@@ -2,7 +2,6 @@ package edu.cwi;
 
 import io.javalin.Javalin;
 import static io.javalin.apibuilder.ApiBuilder.crud;
-import static io.javalin.apibuilder.ApiBuilder.get;
 import static io.javalin.apibuilder.ApiBuilder.path;
 import io.javalin.http.staticfiles.Location;
 import io.javalin.rendering.template.JavalinJte;
@@ -38,7 +37,7 @@ public class App {
 
             config.routes.post(
                 "/login",
-                AuthController::login
+                AuthController::authenticate
             );
 
             config.routes.get(

@@ -1,6 +1,8 @@
 package edu.cwi;
 
 import io.javalin.http.Context;
+import io.javalin.Javalin;
+
 
 public class RouteRoles {
 
@@ -9,13 +11,14 @@ public class RouteRoles {
         
     }
 
-    config.routes.get("/account", ctx -> {
+    public static void registerRoutes(Javalin app) {
+        config.routes.get("/account", ctx -> {
+            if (!isAuthenticated(ctx)) {
+                ctx.redirect("/login");
+                return;
+            }
 
-    if(!RouteRoles.isAuthenticated(ctx)) {
-        ctx.redirect("/login");
-        return;
+            ctx.render("account.html");
+        });
     }
-
-    ctx.render("account.html");
-});
 }
