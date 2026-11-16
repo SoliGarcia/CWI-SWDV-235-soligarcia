@@ -1,38 +1,70 @@
 package edu.cwi;
 
 public class User {
-    // 1. Private fields (Encapsulation)
-    private String name;
-    private int age;
+    private int id;
+    private String username;
+    private String password;
+    private String email;
+    private String firstName;
+    private String lastName;
+    private String role;
 
-    // 2. Default (No-argument) constructor
     public User() {
     }
 
-    // 3. Parameterized constructor
-    public User(String name, int age) {
-        this.name = name;
-        this.age = age;
+    public int getId() {
+        return id;
     }
 
-    // 4. Getter and Setter methods
-    public String getName() {
-        return name;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getUsername() {
+        return username;
     }
 
-    public int getAge() {
-        return age;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public void setAge(int age) {
-        this.age = age;
+    public String getPassword() {
+        return password;
     }
 
-    Object getId() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

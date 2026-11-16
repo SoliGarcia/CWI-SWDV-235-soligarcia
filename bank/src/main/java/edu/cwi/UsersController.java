@@ -2,9 +2,7 @@ package edu.cwi;
 
 import java.math.BigDecimal;
 import java.util.Map;
-
 import org.apache.ibatis.session.SqlSession;
-
 import io.javalin.apibuilder.CrudHandler;
 import io.javalin.http.Context;
 import org.mindrot.jbcrypt.BCrypt;
@@ -28,58 +26,46 @@ public class UsersController implements CrudHandler {
     }
 
     @Override
-public void create(Context ctx) {
-	try (SqlSession session = MyBatisConfig.getSqlSessionFactory().openSession()) {
+    public void create(Context ctx) {
+        User user = ctx.bodyAsClass(User.class);
+        if (user.getPassword() == null || user.getPassword().isBlank()) {
+            ctx.status(400).json(Map.of("error", "password is required"));
+            return;
+        }
 
-		UserMapper userMapper = session.getMapper(UserMapper.class);
-		AccountMapper accountMapper = session.getMapper(AccountMapper.class);
-		TransactionMapper transactionMapper = session.getMapper(TransactionMapper.class);
+        user.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
+        try (SqlSession session = MyBatisConfig.getSqlSessionFactory().openSession()) {
+            UserMapper userMapper = session.getMapper(UserMapper.class);
+            AccountMapper accountMapper = session.getMapper(AccountMapper.class);
 
-		// deserialize the body json
-		User user = ctx.bodyAsClass(User.class);
+            userMapper.insert(user);
 
-		BigDecimal deposit = BigDecimal.valueOf(5.00);
+            Account account = new Account();
+            account.setUserId(user.getId());
+            account.setAccountType("CHECKING");
+            account.setBalance(BigDecimal.ZERO);
+            accountMapper.insert(account);
 
-		// hash the user password
-		String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
-		user.setPassword(hashedPassword);
+            session.commit();
+            ctx.status(201).json(Map.of("id", user.getId(), "username", user.getUsername()));
+        }
+    }
 
-		// insert the user
-		userMapper.insert(user);
 
-		// insert an account for the new user
-		Account account = new Account();
-
-		account.setUserId(user.getId());
-		account.setBalance(deposit);
-
-		accountMapper.insert(account);
-
-		// insert the opening transaction
-		Transaction transaction = new Transaction();
-
-		transaction.setAccountId(account.getId());
-		transaction.setTransactionType(TransactionType.DEPOSIT);
-		transaction.setAmount(deposit);
-		transaction.setDescription("Opening deposit.");
-
-		transactionMapper.insert(transaction);
-
-		// commit the session
-		session.commit();
-
-		// return the new user data
-		ctx.json(user);
-	}
-}
     @Override
     public void update(Context ctx, String resourceId) {
         try (SqlSession session = MyBatisConfig.getSqlSessionFactory().openSession()) {
             User user = ctx.bodyAsClass(User.class);
+            if (user.getPassword() == null || user.getPassword().isBlank()) {
+                ctx.status(400).json(Map.of("error", "password is required"));
+                return;
+            }
+            user.setId(Integer.parseInt(resourceId));
+            user.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
             UserMapper mapper = session.getMapper(UserMapper.class);
             mapper.update(user);
             session.commit();
-            ctx.json(user);
+            ctx.json(Map.of("id", user.getId(), "username", user.getUsername()));
         }
     }
 
@@ -93,18 +79,14 @@ public void create(Context ctx) {
         }
     }
 
-
-public User authenticateUser(Context ctx, String username, String password) {
-	try (SqlSession session = MyBatisConfig.getSqlSessionFactory().openSession()) {
-		UserMapper mapper = session.getMapper(UserMapper.class);
-		User user = mapper.getByUsername(username);
-
-		if(user != null) {
-			if (BCrypt.checkpw(password, user.getPassword())) {
-				return user;
-			}
-		}
-		
-		return null;
-	}
+    public User authenticateUser(Context ctx, String username, String password) {
+        if (username == null || username.isBlank() || password == null || password.isBlank()) {
+            return null;
+        }
+        try (SqlSession session = MyBatisConfig.getSqlSessionFactory().openSession()) {
+            UserMapper mapper = session.getMapper(UserMapper.class);
+            User user = mapper.getByUsername(username);
+            return user != null && BCrypt.checkpw(password, user.getPassword()) ? user : null;
+        }
+    }
 }
