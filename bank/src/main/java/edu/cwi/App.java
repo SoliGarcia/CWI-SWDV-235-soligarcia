@@ -13,7 +13,6 @@ public class App
             config.staticFiles.add("/public", Location.CLASSPATH);
             config.routes.get("/account", ctx -> {ctx.redirect("/account.html");});
             config.routes.get("/logout", ctx -> {ctx.redirect("/");});
-            config.routes.apiBuilder(() -> {path("transactions", () -> {crud("{id}", new TransactionsController());});});
             config.fileRenderer(new JavalinJte());
 			config.routes.apiBuilder(() -> { crud("transactions/{id}", new TransactionsController());});
             
