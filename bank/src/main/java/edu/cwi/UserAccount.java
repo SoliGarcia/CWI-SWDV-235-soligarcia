@@ -10,4 +10,3 @@ public record UserAccount (String name, Double balance, Map<String, String> tran
         return df.format(this.balance);
     }
 }
-

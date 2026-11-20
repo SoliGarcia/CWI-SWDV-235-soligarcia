@@ -1,3 +1,4 @@
+<%-- Java imports --%>
 @import java.util.Map 
 
 <%-- Parameters --%>
@@ -13,11 +14,7 @@
     <link rel="stylesheet" href="/css/styles.css">
   </head>
   <body>
-    <main id="main" class="content"></main>
     <h1>Transactions</h1>
-    <form method="post" action="transactions"></form><button type="submit">Create</button></form>
-    <form method="post" action="transactions/1"><button type="submit">Update</button></form>
-    <form method="post" action="transactions/1"><button type="submit">Delete</button></form>
     <ul>
 		<%-- Loop through the transactions map --%>
 		@for(var entry : transactions.entrySet())
