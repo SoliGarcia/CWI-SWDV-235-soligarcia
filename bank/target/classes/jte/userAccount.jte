@@ -1,3 +1,4 @@
+<%-- Parameters --%>
 @param String name
 @param String balance
 

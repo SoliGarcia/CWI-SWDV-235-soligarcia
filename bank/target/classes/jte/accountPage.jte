@@ -1,14 +1,25 @@
 <%-- Java imports --%>
 @import java.util.Map
+@import gg.jte.Content
+
 
 <%-- Parameters --%>
 @param String title
-@param String name
-@param String balance
-@param Map<String, String> transactions
+@param edu.cwi.UserAccount account
+
+
+<head>
+    <title>Account Page</title>
+</head>
+<body>
+    <h1>{title}</h1>
+    <div>
+        ${content}
+    </div>
+</body>
 
 @template.jte.accountLayout(
     title = title,
-    account = @`@template.jte.userAccount(name, balance)`,
-    detail = @`@template.jte.transactionsList(transactions)`
+    account = @`@template.jte.partials.userAccount(name, balance)`,
+    detail = @`@template.jte.partials.transactionsList(transactions)`
 )

@@ -1,6 +1,5 @@
 package edu.cwi;
 
-import java.util.List;
 import java.util.Map;
 
 import io.javalin.apibuilder.CrudHandler;
@@ -8,13 +7,15 @@ import io.javalin.http.Context;
 
 public class TransactionsController implements CrudHandler {
 
-    private final List<?> transactions = List.of();
+    private final Map<String, String> transactions = Map.of();
 
     @Override
     public void getAll(Context ctx) {
+        ctx.render("jte/transactionPage.jte", Map.of("transactions", transactions));
+
         UserAccount account = new UserAccount("John Public", 500.00, transactions);
-	
 	    ctx.render("jte/accountPage.jte", Map.of("title", "Account Transactions", "account", account));
+        
           
     }
 
