@@ -1,7 +1,6 @@
 package edu.cwi;
 
 import io.javalin.http.Context;
-
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
@@ -22,7 +21,7 @@ public class AuthController {
         Collection<UserAccount> accounts = userMap.values();
 
         for (UserAccount account : accounts) {
-            if (account.id().equals(id)) {
+            if (account.username().equals(id)) {
                 return Optional.of(account);
             }
         }
@@ -39,7 +38,7 @@ public class AuthController {
         UserAccount user = userMap.get(credentials);
 
 		if(user != null) {
-            ctx.cookieStore().set("user-id", user.id());
+            ctx.cookieStore().set("user-id", user.username());
             ctx.cookieStore().set("user-role", user.role());
             ctx.redirect("/account");
         }

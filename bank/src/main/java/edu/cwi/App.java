@@ -30,7 +30,6 @@ public class App
             // routes
             config.routes.get("/account", ctx -> {ctx.redirect("/account.html");});
             config.routes.get("/logout", ctx -> {ctx.redirect("/");});
-            
 			config.routes.apiBuilder(() -> { crud("transactions/{id}", new TransactionsController());});
             
 
