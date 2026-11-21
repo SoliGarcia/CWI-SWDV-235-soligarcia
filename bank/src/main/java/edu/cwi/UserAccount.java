@@ -5,7 +5,7 @@ import java.util.Map;
 
 public record UserAccount (String name, Double balance, Map<String, String> transactions) {
 
-    public String formatBalance() {
+    public String Balance() {
         DecimalFormat df = new DecimalFormat("$#,###.00");
         return df.format(this.balance);
     }
