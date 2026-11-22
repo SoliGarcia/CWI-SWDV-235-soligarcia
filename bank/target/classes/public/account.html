@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bank Account</title>
+</head>
+<body>
+    <h1>Welcome to Your Bank Account</h1>
+    @param UserAccount account
+
+<h1>Account Details</h1>
+
+<p>Name: ${account.username()}</p>
+
+<p>Balance: $${account.balance()}</p>
+
+<ul>
+    @for(var entry : account.transactions().entrySet())
+        <li>${entry.getValue()}</li>
+    @end
+</ul>
+
+<form action="/logout" method="get">
+    <button type="submit">Logout</butt
+        
+</body>
+</html>
