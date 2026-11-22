@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.eclipse.jetty.security.UserStore.User;
+
 
 public class AuthController {
     
@@ -31,21 +33,22 @@ public class AuthController {
 
     public static void authenticate(Context ctx) {
 
-        String username = ctx.formParam("username");
-        String password = ctx.formParam("password");
+        UsersController usersController = new UsersController();
 
-        Pair credentials = new Pair(username, password);
-        UserAccount user = userMap.get(credentials);
+	String username = ctx.formParam("username");
+	String password = ctx.formParam("password");
 
-		if(user != null) {
-            ctx.cookieStore().set("user-id", user.username());
-            ctx.cookieStore().set("user-role", user.role());
-            ctx.redirect("/account");
-        }
-        else {
-            ctx.cookieStore().clear();
-            ctx.redirect("/unauthorized.html");
-        }
+	User user = usersController.authenticateUser(ctx, username, password);
+
+	if(user != null) {
+		ctx.cookieStore().set("user-id", user.getId());
+		ctx.cookieStore().set("user-role", user.getRole());
+		ctx.redirect("/account");
+	}
+	else {
+		ctx.cookieStore().clear();
+		ctx.redirect("/unauthorized.html");
+	}
     }
 
     public static void logout(Context ctx) {
