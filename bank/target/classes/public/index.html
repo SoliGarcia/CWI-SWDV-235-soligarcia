@@ -6,14 +6,18 @@
 <body>
     <h1>Bank Login</h1>
 
-    <form action="/account" method="GET">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username">
+    <form action="/login" method="post">
+    <div>
+        <label>Username:</label>
+        <input type="text" name="username">
+    </div>
 
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password">
+    <div>
+        <label>Password:</label>
+        <input type="password" name="password">
+    </div>
 
-        <button type="submit">Log In</button>
-    </form>
+    <button type="submit">Login</button>
+</form>
 </body>
 </html>

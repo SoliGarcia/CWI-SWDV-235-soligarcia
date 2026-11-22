@@ -33,23 +33,45 @@ public class TransactionsController implements CrudHandler {
     }
 
     @Override
-    public void getOne(Context ctx, String id) {
+    public void getOne(Context ctx, String resourceId) {
+
+        String transaction = transactions.get(resourceId);
+
+        if (transaction != null) {
+            // Use ctx to render transaction html
+        } else {
+            ctx.status(404).result("Transaction not found");
+        }
     }
 
     @Override
     public void create(Context ctx) {
-        ctx.redirect("/transactions");
+
+        String body = ctx.body();
+        String id = String.valueOf(transactions.size() + 1);
+
+        transactions.put(id, body);
+
+		// Use ctx to render all transactions html
     }
 
     @Override
-    public void update(Context ctx, String id) {
-        ctx.redirect("/transactions");
+    public void update(Context ctx, String resourceId) {
+
+        if (transactions.containsKey(resourceId)) {
+            transactions.put(resourceId, ctx.body());
+
+            // Use ctx to render all transactions html
+        } else {
+            ctx.status(404).result("Transaction not found");
+        }
     }
 
     @Override
-    public void delete(Context ctx, String id) {
-        ctx.redirect("/transactions");
+    public void delete(Context ctx, String resourceId) {
 
+        transactions.remove(resourceId);
+
+		// Use ctx to render all transactions html
     }
-
 }

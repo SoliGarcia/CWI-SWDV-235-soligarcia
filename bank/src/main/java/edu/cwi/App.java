@@ -1,7 +1,7 @@
 package edu.cwi;
 
 import io.javalin.Javalin;
-import static io.javalin.apibuilder.ApiBuilder.crud;
+import static io.javalin.apibuilder.ApiBuilder.*;
 import io.javalin.http.UnauthorizedResponse;
 import io.javalin.http.staticfiles.Location;
 import io.javalin.rendering.template.JavalinJte;
@@ -20,7 +20,10 @@ public class App
 	            if (ctx.routeRoles().isEmpty()) {
 		            return; }
                 String role = ctx.cookieStore().get("user-role"); // get the role from the cookie store
-	            AppRole appRole = AppRole.valueOf(role);
+	            if (role == null) {
+                    throw new UnauthorizedResponse();
+                }
+                AppRole appRole = AppRole.valueOf(role);
 
 	            if (!ctx.routeRoles().contains(appRole)) {
                     ctx.cookieStore().clear();
@@ -28,11 +31,21 @@ public class App
             });
             
             // routes
-            config.routes.get("/account", ctx -> {ctx.redirect("/account.html");});
-            config.routes.get("/logout", ctx -> {ctx.redirect("/");});
-			config.routes.apiBuilder(() -> { crud("transactions/{id}", new TransactionsController());});
-            
+            config.routes.apiBuilder(() -> {
+                crud("transactions/{id}", new TransactionsController());
+                });
 
+            config.routes.get("/account", ctx -> {
+                new TransactionsController().getAll(ctx);
+            });
+                config.routes.post("/login", ctx -> {
+                    AuthController.authenticate(ctx);
+                });
+                config.routes.get("/logout", ctx -> {
+                    AuthController.logout(ctx);
+                });
+
+            
         }).start(7070);
         
     }

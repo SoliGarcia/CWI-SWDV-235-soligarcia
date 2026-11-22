@@ -9,6 +9,6 @@
 
 @template.jte.accountLayout(
     title = title,
-    account = @`@template.jte.userAccount(account.name(), account.BalanceFormat())`,
-    detail = @`@template.jte.transactionsList(account.transactions)`
+    account = @`@template.jte.userAccount(account.username(), account.balance().toString())`,
+    detail = @`@template.jte.transactionsList(account.transactions())`
 )
