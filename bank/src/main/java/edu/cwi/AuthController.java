@@ -39,7 +39,7 @@ public class AuthController {
 	User user = usersController.authenticateUser(ctx, username, password);
 
 	if(user != null) {
-		ctx.cookieStore().set("user-id", user.getId());
+		ctx.cookieStore().set("username", user.getUsername());
 		ctx.cookieStore().set("user-role", user.getRole());
 		ctx.redirect("/account");
 	}

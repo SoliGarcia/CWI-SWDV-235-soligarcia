@@ -11,16 +11,14 @@ public class TransactionsController implements CrudHandler {
 
     @Override
     public void getAll(Context ctx) {
-        ctx.render("jte/transactionPage.jte", Map.of("transactions", transactions));
+        String username = ctx.cookieStore().get("username");
 
-        String userId = ctx.cookieStore().get("user-id");
+        if (username == null) {
+            ctx.redirect("/unauthorized.html");
+            return;
+        }
 
-            if (userId == null) {
-                ctx.redirect("/unauthorized.html");
-                return;
-            }
-
-        AuthController.getUser(userId).ifPresentOrElse(
+        AuthController.getUser(username).ifPresentOrElse(
           account -> ctx.render(
                 "jte/accountPage.jte",
                 Map.of(

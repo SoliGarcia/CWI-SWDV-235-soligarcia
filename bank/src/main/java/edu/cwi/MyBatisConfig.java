@@ -20,7 +20,7 @@ public class MyBatisConfig {
         HikariConfig hikariConfig = new HikariConfig();
         hikariConfig.setJdbcUrl("jdbc:mysql://localhost:3306/online_bank");
         hikariConfig.setUsername("root");
-        hikariConfig.setPassword("Moroni7:47");
+        hikariConfig.setPassword("mysqlsa");
         hikariConfig.setDriverClassName("com.mysql.cj.jdbc.Driver");
         DataSource dataSource = new HikariDataSource(hikariConfig);
 
