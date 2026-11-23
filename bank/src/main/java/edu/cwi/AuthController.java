@@ -41,7 +41,7 @@ public class AuthController {
 	if(user != null) {
 		ctx.cookieStore().set("username", user.getUsername());
 		ctx.cookieStore().set("user-role", user.getRole());
-		ctx.redirect("/account");
+		ctx.redirect("/accounts");
 	}
 	else {
 		ctx.cookieStore().clear();

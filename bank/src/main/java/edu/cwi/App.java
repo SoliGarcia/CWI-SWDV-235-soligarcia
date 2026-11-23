@@ -36,14 +36,17 @@ public class App
                 crud("users/{id}", new UsersController()); 
                 });
 
-            config.routes.get("/account", ctx -> {
-                new TransactionsController().getAll(ctx);
-            });
             config.routes.post("/login", ctx -> {
                 AuthController.authenticate(ctx);
             });
             config.routes.get("/logout", ctx -> {
                 AuthController.logout(ctx);
+            });
+            config.routes.get("/accounts", ctx -> {
+                AccountsController.getAccounts(ctx);
+            });
+            config.routes.get("/account/{id}", ctx -> {
+                AccountsController.getAccount(ctx);
             });
 
             
