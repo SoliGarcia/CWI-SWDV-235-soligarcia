@@ -2,8 +2,6 @@ package edu.cwi;
 
 import java.util.Map;
 
-import org.apache.ibatis.session.SqlSession;
-
 import io.javalin.apibuilder.CrudHandler;
 import io.javalin.http.Context;
 
@@ -12,66 +10,30 @@ public class TransactionsController implements CrudHandler {
     private final Map<String, String> transactions = Map.of();
 
     @Override
-        public void getAll(Context ctx) {
+    public void getAll(Context ctx) {
+        ctx.render("jte/transactionPage.jte", Map.of("transactions", transactions));
 
-            Integer userId = ctx.cookieStore().get("user-id");
+        String userId = ctx.cookieStore().get("user-id");
 
             if (userId == null) {
                 ctx.redirect("/unauthorized.html");
                 return;
             }
 
-            try (SqlSession session = MyBatisConfig.getSqlSessionFactory().openSession()) {
+        AuthController.getUser(userId).ifPresentOrElse(
+          account -> ctx.render(
+                "jte/accountPage.jte",
+                Map.of(
+                    "title", "Account Transactions",
+                    "name", account.username(),
+                    "balance", account.balance().toString(),
+                    "transactions", account.transactions()
+                )
+            ),
+            () -> ctx.redirect("/unauthorized.html")
+        );
+    }
 
-                UserMapper userMapper = session.getMapper(UserMapper.class);
-                AccountMapper accountMapper = session.getMapper(AccountMapper.class);
-                TransactionMapper transactionMapper = session.getMapper(TransactionMapper.class);
-
-                User user = userMapper.getById(userId);
-
-                if (user == null) {
-                    ctx.redirect("/unauthorized.html");
-                    return;
-                }
-
-                var accounts = accountMapper.getByUserId(userId);
-
-                if (accounts.isEmpty()) {
-                    ctx.redirect("/unauthorized.html");
-                    return;
-                }
-
-                Account account = accounts.get(0);
-
-                Map<String, String> transactionMap = new java.util.LinkedHashMap<>();
-
-                for (Transaction transaction :
-                        transactionMapper.getByAccountId(account.getAccountId())) {
-
-                    transactionMap.put(
-                        String.valueOf(transaction.getTransactionId()),
-                        transaction.getDescription()
-                    );
-                }
-
-                UserAccount userAccount = new UserAccount(
-                    String.valueOf(user.getId()),
-                    user.getFirstName() + " " + user.getLastName(),
-                    AppRole.valueOf(user.getRole()),
-                    account.getBalance().doubleValue(),
-                    transactionMap
-                );
-
-                ctx.render(
-                    "jte/accountPage.jte",
-                    Map.of(
-                        "title", "Account Transactions",
-                        "account", userAccount,
-                        "detail", "Account Details"
-                    )
-                );
-            }
-        }
 
     @Override
     public void getOne(Context ctx, String resourceId) {

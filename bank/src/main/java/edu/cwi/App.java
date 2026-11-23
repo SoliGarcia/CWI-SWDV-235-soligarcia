@@ -48,6 +48,5 @@ public class App
 
             
         }).start(7070);
-        
     }
 }
