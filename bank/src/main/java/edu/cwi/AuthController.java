@@ -1,12 +1,10 @@
 package edu.cwi;
 
-import io.javalin.http.Context;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 
-import org.eclipse.jetty.security.UserStore.User;
+import io.javalin.http.Context;
 
 
 public class AuthController {

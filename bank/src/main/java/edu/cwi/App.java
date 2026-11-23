@@ -1,7 +1,7 @@
 package edu.cwi;
 
 import io.javalin.Javalin;
-import static io.javalin.apibuilder.ApiBuilder.*;
+import static io.javalin.apibuilder.ApiBuilder.crud;
 import io.javalin.http.UnauthorizedResponse;
 import io.javalin.http.staticfiles.Location;
 import io.javalin.rendering.template.JavalinJte;
@@ -33,17 +33,18 @@ public class App
             // routes
             config.routes.apiBuilder(() -> {
                 crud("transactions/{id}", new TransactionsController());
+                crud("users/{id}", new UsersController()); 
                 });
 
             config.routes.get("/account", ctx -> {
                 new TransactionsController().getAll(ctx);
             });
-                config.routes.post("/login", ctx -> {
-                    AuthController.authenticate(ctx);
-                });
-                config.routes.get("/logout", ctx -> {
-                    AuthController.logout(ctx);
-                });
+            config.routes.post("/login", ctx -> {
+                AuthController.authenticate(ctx);
+            });
+            config.routes.get("/logout", ctx -> {
+                AuthController.logout(ctx);
+            });
 
             
         }).start(7070);

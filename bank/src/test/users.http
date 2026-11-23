@@ -13,10 +13,24 @@ content-type: application/json
 Cookie: javalin-cookie-store=eyJ1c2VyLWlkIjoxLCJ1c2VyLXJvbGUiOiJBRE1JTiJ9
 
 {
-    "username": "test",
-    "password": "password",
+    "username": "Admin",
+    "password": "admin1",
     "email": "test@test.com",
     "firstName": "Test",
     "lastName": "Guy",
+    "role": "ADMIN"
+
+    "username": "ajones",
+    "password": "weak",
+    "email": "ajones@example.com",
+    "firstName": "Alice",
+    "lastName": "Jones",
+    "role": "CUSTOMER"
+
+    "username": "bjones",
+    "password": "weak",
+    "email": "bjones@example.com",
+    "firstName": "Bob",
+    "lastName": "Jones",
     "role": "CUSTOMER"
 }

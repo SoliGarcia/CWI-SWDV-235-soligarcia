@@ -3,13 +3,8 @@ package edu.cwi;
 import java.math.BigDecimal;
 import java.util.Map;
 
-import org.mindrot.jbcrypt.BCrypt;
-
 import org.apache.ibatis.session.SqlSession;
-
-import edu.cwi.MyBatisConfig;
-import edu.cwi.User;
-import edu.cwi.UserMapper;
+import org.mindrot.jbcrypt.BCrypt;
 
 import io.javalin.apibuilder.CrudHandler;
 import io.javalin.http.Context;
@@ -63,8 +58,8 @@ public void create(Context ctx) {
 		// insert the opening transaction
 		Transaction transaction = new Transaction();
 
-		transaction.setAccountId(account.getId());
-		transaction.setTransactionType(TransactionType.DEPOSIT);
+		transaction.setAccountId(account.getAccountId());
+		transaction.setTransactionType("DEPOSIT");
 		transaction.setAmount(deposit);
 		transaction.setDescription("Opening deposit.");
 

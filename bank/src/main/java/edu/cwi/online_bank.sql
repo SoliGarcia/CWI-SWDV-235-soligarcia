@@ -2,6 +2,7 @@
 -- Online Bank Database
 -- =============================================================
 
+-- WARNING: This setup script drops and recreates online_bank, deleting its existing data.
 DROP DATABASE IF EXISTS online_bank;
 CREATE DATABASE online_bank;
 
@@ -63,9 +64,10 @@ CREATE TABLE transactions (
 
 -- =============================================================
 -- Sample data
--- The password hashes below are placeholders, not real hashes.
--- Generate real ones in your app (e.g. password_hash() / bcrypt).
+-- Demo passwords: admin/admin1, ajones/weak, and bjones/weak.
 -- =============================================================
 INSERT INTO users (username, password, email, first_name, last_name, role) VALUES
-    ('admin', '$2b$10$REPLACE_WITH_REAL_BCRYPT_HASH_admin000000000000000', 'admin@example.com',  'Site', 'Admin', 'ADMIN');
+    ('admin', '$2a$10$X7i/etA67/4uiID/r3LCBe5CHMw5UM/ZO.VKFXx1FMeZz.02D3md.', 'admin@example.com', 'Site', 'Admin', 'ADMIN'),
+    ('ajones', '$2a$10$ohMPkElgBgtwdZcBWcQXHOTTmHNUd/PTrVi4QTZiSzi1sA9YhZg9m', 'ajones@example.com', 'Alice', 'Jones', 'CUSTOMER'),
+    ('bjones', '$2a$10$ohMPkElgBgtwdZcBWcQXHOTTmHNUd/PTrVi4QTZiSzi1sA9YhZg9m', 'bjones@example.com', 'Bob', 'Jones', 'CUSTOMER');
 
