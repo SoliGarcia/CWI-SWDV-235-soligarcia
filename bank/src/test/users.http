@@ -19,14 +19,29 @@ Cookie: javalin-cookie-store=eyJ1c2VyLWlkIjoxLCJ1c2VyLXJvbGUiOiJBRE1JTiJ9
     "firstName": "Test",
     "lastName": "Guy",
     "role": "ADMIN"
+}
 
+###
+
+POST http://localhost:7070/users?return=json
+content-type: application/json
+Cookie: javalin-cookie-store=eyJ1c2VyLWlkIjoxLCJ1c2VyLXJvbGUiOiJBRE1JTiJ9
+
+{
     "username": "ajones",
     "password": "weak",
     "email": "ajones@example.com",
     "firstName": "Alice",
     "lastName": "Jones",
     "role": "CUSTOMER"
+}
 
+###
+POST http://localhost:7070/users?return=json
+content-type: application/json
+Cookie: javalin-cookie-store=eyJ1c2VyLWlkIjoxLCJ1c2VyLXJvbGUiOiJBRE1JTiJ9
+
+{
     "username": "bjones",
     "password": "weak",
     "email": "bjones@example.com",

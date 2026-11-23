@@ -1,6 +1,9 @@
 package edu.cwi;
 
 import java.util.Map;
+
+import org.apache.ibatis.session.SqlSession;
+
 import io.javalin.apibuilder.CrudHandler;
 import io.javalin.http.Context;
 
@@ -9,28 +12,66 @@ public class TransactionsController implements CrudHandler {
     private final Map<String, String> transactions = Map.of();
 
     @Override
-    public void getAll(Context ctx) {
-        ctx.render("jte/transactionPage.jte", Map.of("transactions", transactions));
+        public void getAll(Context ctx) {
 
-        String userId = ctx.cookieStore().get("user-id");
+            Integer userId = ctx.cookieStore().get("user-id");
 
             if (userId == null) {
                 ctx.redirect("/unauthorized.html");
                 return;
             }
 
-        AuthController.getUser(userId).ifPresentOrElse(
-            account -> ctx.render(
-                "jte/accountPage.jte",
-                Map.of(
-                    "title", "Account Transactions",
-                    "account", account
-                )
-            ),
-            () -> ctx.redirect("/unauthorized.html")
-        );
-          
-    }
+            try (SqlSession session = MyBatisConfig.getSqlSessionFactory().openSession()) {
+
+                UserMapper userMapper = session.getMapper(UserMapper.class);
+                AccountMapper accountMapper = session.getMapper(AccountMapper.class);
+                TransactionMapper transactionMapper = session.getMapper(TransactionMapper.class);
+
+                User user = userMapper.getById(userId);
+
+                if (user == null) {
+                    ctx.redirect("/unauthorized.html");
+                    return;
+                }
+
+                var accounts = accountMapper.getByUserId(userId);
+
+                if (accounts.isEmpty()) {
+                    ctx.redirect("/unauthorized.html");
+                    return;
+                }
+
+                Account account = accounts.get(0);
+
+                Map<String, String> transactionMap = new java.util.LinkedHashMap<>();
+
+                for (Transaction transaction :
+                        transactionMapper.getByAccountId(account.getAccountId())) {
+
+                    transactionMap.put(
+                        String.valueOf(transaction.getTransactionId()),
+                        transaction.getDescription()
+                    );
+                }
+
+                UserAccount userAccount = new UserAccount(
+                    String.valueOf(user.getId()),
+                    user.getFirstName() + " " + user.getLastName(),
+                    AppRole.valueOf(user.getRole()),
+                    account.getBalance().doubleValue(),
+                    transactionMap
+                );
+
+                ctx.render(
+                    "jte/accountPage.jte",
+                    Map.of(
+                        "title", "Account Transactions",
+                        "account", userAccount,
+                        "detail", "Account Details"
+                    )
+                );
+            }
+        }
 
     @Override
     public void getOne(Context ctx, String resourceId) {
@@ -39,6 +80,7 @@ public class TransactionsController implements CrudHandler {
 
         if (transaction != null) {
             // Use ctx to render transaction html
+            ctx.render("transactions.html");
         } else {
             ctx.status(404).result("Transaction not found");
         }
@@ -53,6 +95,7 @@ public class TransactionsController implements CrudHandler {
         transactions.put(id, body);
 
 		// Use ctx to render all transactions html
+        ctx.render("transactions.html");
     }
 
     @Override
@@ -62,6 +105,7 @@ public class TransactionsController implements CrudHandler {
             transactions.put(resourceId, ctx.body());
 
             // Use ctx to render all transactions html
+            ctx.render("transactions.html");
         } else {
             ctx.status(404).result("Transaction not found");
         }
@@ -73,5 +117,6 @@ public class TransactionsController implements CrudHandler {
         transactions.remove(resourceId);
 
 		// Use ctx to render all transactions html
+        ctx.render("transactions.html");
     }
 }

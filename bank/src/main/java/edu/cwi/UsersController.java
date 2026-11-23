@@ -51,8 +51,8 @@ public void create(Context ctx) {
 		Account account = new Account();
 
 		account.setUserId(user.getId());
+		account.setAccountType("CHECKING");
 		account.setBalance(deposit);
-
 		accountMapper.insert(account);
 
 		// insert the opening transaction
@@ -106,7 +106,8 @@ public void create(Context ctx) {
 		}
 		
 		return null;
-	}
+	} 
 }
+
 
 }
