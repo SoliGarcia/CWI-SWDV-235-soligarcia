@@ -60,6 +60,24 @@ public class AccountsController {
             return;
         }
 
+        UserAccount demoAccount = AuthController.getUser(ctx.pathParam("id")).orElse(null);
+        if (demoAccount != null) {
+            if (!username.equals(ctx.pathParam("id"))) {
+                ctx.status(404).result("Account not found");
+                return;
+            }
+
+            Map<String, Object> model = new HashMap<>();
+            model.put("title", "Account Details");
+            model.put("userName", demoAccount.username());
+            model.put("accounts", List.of());
+            model.put("account", null);
+            model.put("transactions", List.of());
+            model.put("demoAccount", demoAccount);
+            ctx.render("jte/accountPage.jte", model);
+            return;
+        }
+
         int accountId;
         try {
             accountId = Integer.parseInt(ctx.pathParam("id"));

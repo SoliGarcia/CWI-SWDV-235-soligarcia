@@ -5,7 +5,7 @@ import edu.cwi.UserAccount;
 @SuppressWarnings("unchecked")
 public final class JteuserAccountGenerated {
 	public static final String JTE_NAME = "jte/userAccount.jte";
-	public static final int[] JTE_LINE_INFO = {0,0,1,2,4,4,4,4,10,10,10,11,11,11,15,15,15,17,17,18,18,18,19,19,21,21,23,23,35,35,37,37,37,38,38,38,39,39,39,40,40,40,40,42,42,46,46,47,47,52,52,52,54,54,54,56,56,56,58,58,59,59,60,60,60,4,5,6,7,7,7,7};
+	public static final int[] JTE_LINE_INFO = {0,0,1,2,4,4,4,4,10,10,10,11,11,11,15,15,15,18,18,18,18,19,19,20,20,20,21,21,23,23,25,25,37,37,39,39,39,40,40,40,41,41,41,42,42,42,42,44,44,48,48,49,49,53,53,53,55,55,55,57,57,57,60,60,60,60,61,61,62,62,63,63,63,4,5,6,7,7,7,7};
 	public static void render(gg.jte.html.HtmlTemplateOutput jteOutput, gg.jte.html.HtmlInterceptor jteHtmlInterceptor, String userName, List<Account> accounts, Account account, UserAccount demoAccount) {
 		jteOutput.writeContent("\r\n<div>\r\n    ");
 		if (demoAccount != null) {
@@ -15,7 +15,11 @@ public final class JteuserAccountGenerated {
 			jteOutput.writeContent("</h1>\r\n        <h2>Account details</h2>\r\n        <dl class=\"row\">\r\n            <dt class=\"col-sm-4\">Balance</dt>\r\n            <dd class=\"col-sm-8\">");
 			jteOutput.setContext("dd", null);
 			jteOutput.writeUserContent(demoAccount.formatBalance());
-			jteOutput.writeContent("</dd>\r\n        </dl>\r\n    ");
+			jteOutput.writeContent("</dd>\r\n        </dl>\r\n        <a class=\"btn btn-primary\"\r\n           href=\"/account/");
+			jteOutput.setContext("a", "href");
+			jteOutput.writeUserContent(demoAccount.loginUsername());
+			jteOutput.setContext("a", null);
+			jteOutput.writeContent("/deposit\">Make a deposit</a>\r\n    ");
 		} else {
 			jteOutput.writeContent("\r\n        <h1>Welcome, ");
 			jteOutput.setContext("h1", null);
@@ -47,7 +51,7 @@ public final class JteuserAccountGenerated {
 				}
 				jteOutput.writeContent("\r\n        ");
 			} else {
-				jteOutput.writeContent("\r\n            <p><a href=\"/accounts\">Back to accounts</a></p>\r\n            <h2>Account details</h2>\r\n            <dl class=\"row\">\r\n                <dt class=\"col-sm-4\">Account number</dt>\r\n                <dd class=\"col-sm-8\">");
+				jteOutput.writeContent("\r\n            <h2>Account details</h2>\r\n            <dl class=\"row\">\r\n                <dt class=\"col-sm-4\">Account number</dt>\r\n                <dd class=\"col-sm-8\">");
 				jteOutput.setContext("dd", null);
 				jteOutput.writeUserContent(account.getAccountId());
 				jteOutput.writeContent("</dd>\r\n                <dt class=\"col-sm-4\">Account type</dt>\r\n                <dd class=\"col-sm-8\">");
@@ -56,7 +60,11 @@ public final class JteuserAccountGenerated {
 				jteOutput.writeContent("</dd>\r\n                <dt class=\"col-sm-4\">Balance</dt>\r\n                <dd class=\"col-sm-8\">$");
 				jteOutput.setContext("dd", null);
 				jteOutput.writeUserContent(account.getBalance());
-				jteOutput.writeContent("</dd>\r\n            </dl>\r\n        ");
+				jteOutput.writeContent("</dd>\r\n            </dl>\r\n            <a class=\"btn btn-primary\"\r\n               href=\"/account/");
+				jteOutput.setContext("a", "href");
+				jteOutput.writeUserContent(account.getAccountId());
+				jteOutput.setContext("a", null);
+				jteOutput.writeContent("/deposit\">Make a deposit</a>\r\n        ");
 			}
 			jteOutput.writeContent("\r\n    ");
 		}

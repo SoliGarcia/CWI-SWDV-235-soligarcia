@@ -42,6 +42,12 @@ public class App
             config.routes.get("/account/{id}", ctx -> {
                 AccountsController.getAccount(ctx);
             });
+            config.routes.get("/account/{id}/deposit", ctx -> {
+                new TransactionsController().showDepositPage(ctx);
+            });
+            config.routes.post("/account/{id}/transactions", ctx -> {
+                new TransactionsController().createForAccount(ctx);
+            });
             config.routes.post("/login", ctx -> {
                 AuthController.authenticate(ctx);
             });

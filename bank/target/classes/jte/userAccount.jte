@@ -15,6 +15,8 @@
             <dt class="col-sm-4">Balance</dt>
             <dd class="col-sm-8">${demoAccount.formatBalance()}</dd>
         </dl>
+        <a class="btn btn-primary"
+           href="/account/${demoAccount.loginUsername()}/deposit">Make a deposit</a>
     @else
         <h1>Welcome, ${userName}</h1>
         @if(account == null)
@@ -46,7 +48,6 @@
                 </div>
             @endif
         @else
-            <p><a href="/accounts">Back to accounts</a></p>
             <h2>Account details</h2>
             <dl class="row">
                 <dt class="col-sm-4">Account number</dt>
@@ -56,6 +57,8 @@
                 <dt class="col-sm-4">Balance</dt>
                 <dd class="col-sm-8">$${account.getBalance()}</dd>
             </dl>
+            <a class="btn btn-primary"
+               href="/account/${account.getAccountId()}/deposit">Make a deposit</a>
         @endif
     @endif
 </div>
