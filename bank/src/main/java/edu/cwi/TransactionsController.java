@@ -18,18 +18,7 @@ public class TransactionsController implements CrudHandler {
             return;
         }
 
-        AuthController.getUser(username).ifPresentOrElse(
-          account -> ctx.render(
-                "jte/accountPage.jte",
-                Map.of(
-                    "title", "Account Transactions",
-                    "name", account.username(),
-                    "balance", account.balance().toString(),
-                    "transactions", account.transactions()
-                )
-            ),
-            () -> ctx.redirect("/unauthorized.html")
-        );
+        ctx.redirect("/accounts");
     }
 
 

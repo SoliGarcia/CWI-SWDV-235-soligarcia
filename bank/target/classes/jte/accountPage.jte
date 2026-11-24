@@ -1,14 +1,17 @@
-<%-- Java imports --%>
-@import java.util.Map
+@import java.util.List
+@import edu.cwi.Account
+@import edu.cwi.Transaction
+@import edu.cwi.UserAccount
 
-<%-- Parameters --%>
 @param String title
-@param String name
-@param String balance
-@param Map<String, String> transactions
+@param String userName
+@param List<Account> accounts
+@param Account account
+@param List<Transaction> transactions
+@param UserAccount demoAccount
 
 @template.jte.accountLayout(
     title = title,
-    account = @`@template.jte.userAccount(name, balance)`,
-    detail = @`@template.jte.transactionsList(transactions)`
+    account = @`@template.jte.userAccount(userName, accounts, account, demoAccount)`,
+    detail = @`@template.jte.transactionsList(transactions, account, demoAccount)`
 )

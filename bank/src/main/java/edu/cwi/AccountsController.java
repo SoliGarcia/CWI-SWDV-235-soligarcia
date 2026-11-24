@@ -1,5 +1,6 @@
 package edu.cwi;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +17,19 @@ public class AccountsController {
             return;
         }
 
+        UserAccount demoAccount = AuthController.getUser(username).orElse(null);
+        if (demoAccount != null) {
+            Map<String, Object> model = new HashMap<>();
+            model.put("title", "My Account");
+            model.put("userName", demoAccount.username());
+            model.put("accounts", List.of());
+            model.put("account", null);
+            model.put("transactions", List.of());
+            model.put("demoAccount", demoAccount);
+            ctx.render("jte/accountPage.jte", model);
+            return;
+        }
+
         try (SqlSession session = MyBatisConfig.getSqlSessionFactory().openSession()) {
             UserMapper userMapper = session.getMapper(UserMapper.class);
             User user = userMapper.getByUsername(username);
@@ -28,10 +42,14 @@ public class AccountsController {
             AccountMapper accountMapper = session.getMapper(AccountMapper.class);
             List<Account> accounts = accountMapper.getByUserId(user.getId());
 
-            ctx.render("jte/accountsPage.jte", Map.of(
-                "userName", displayName(user),
-                "accounts", accounts
-            ));
+            Map<String, Object> model = new HashMap<>();
+            model.put("title", "My Accounts");
+            model.put("userName", displayName(user));
+            model.put("accounts", accounts);
+            model.put("account", null);
+            model.put("transactions", List.of());
+            model.put("demoAccount", null);
+            ctx.render("jte/accountPage.jte", model);
         }
     }
 
@@ -69,11 +87,14 @@ public class AccountsController {
             TransactionMapper transactionMapper = session.getMapper(TransactionMapper.class);
             List<Transaction> transactions = transactionMapper.getByAccountId(accountId);
 
-            ctx.render("jte/accountDetailPage.jte", Map.of(
-                "userName", displayName(user),
-                "account", account,
-                "transactions", transactions
-            ));
+            Map<String, Object> model = new HashMap<>();
+            model.put("title", "Account Details");
+            model.put("userName", displayName(user));
+            model.put("accounts", List.of());
+            model.put("account", account);
+            model.put("transactions", transactions);
+            model.put("demoAccount", null);
+            ctx.render("jte/accountPage.jte", model);
         }
     }
 

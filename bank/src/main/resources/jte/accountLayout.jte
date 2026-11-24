@@ -16,14 +16,17 @@
   </head>
   <body>
     <div class="container">
+        <header class="d-flex justify-content-end py-3">
+            <a href="/logout">Log out</a>
+        </header>
         <div class="row align-items-start">
-			<div class="col">
-				${account}
-			</div>
-			<div class="col">
-				${detail}
-			</div>
-		</div>
+            <div class="col">
+                ${account}
+            </div>
+            <div class="col">
+                ${detail}
+            </div>
+        </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
   </body>

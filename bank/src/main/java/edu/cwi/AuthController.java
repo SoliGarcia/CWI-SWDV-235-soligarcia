@@ -1,52 +1,62 @@
 package edu.cwi;
 
-import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 
 import io.javalin.http.Context;
+import org.mindrot.jbcrypt.BCrypt;
 
 
 public class AuthController {
     
-    record Pair(String a, String b) {}
-
-    private static final Map<Pair, UserAccount> userMap = Map.of(
-        new Pair("ajones", "weak"), new UserAccount("94f6901f-cd0f-4c90-81dc-3601a071c077", "Alice Jones", AppRole.CUSTOMER, 750.00, Map.of("1", "Deposited $750.00")),
-        new Pair("bjones", "weak"), new UserAccount("99377dc1-617d-45bd-b5fe-ac6418f06f43", "Bob Jones", AppRole.CUSTOMER, 500.00, Map.of("1", "Deposited $500.00"))
+    private static final Map<String, UserAccount> userMap = Map.of(
+        "ajones", new UserAccount(BCrypt.hashpw("weak", BCrypt.gensalt()), "Alice Jones", AppRole.CUSTOMER, 750.00, Map.of("1", "Deposited $750.00")),
+        "bjones", new UserAccount(BCrypt.hashpw("weak", BCrypt.gensalt()), "Bob Jones", AppRole.CUSTOMER, 500.00, Map.of("1", "Deposited $500.00"))
     );
 
-    public static Optional<UserAccount> getUser(String id) {
+    public static Optional<UserAccount> getUser(String username) {
+        if (username == null) {
+            return Optional.empty();
+        }
+        return Optional.ofNullable(userMap.get(username));
+    }
 
-        Collection<UserAccount> accounts = userMap.values();
-
-        for (UserAccount account : accounts) {
-            if (account.username().equals(id)) {
-                return Optional.of(account);
-            }
+    public static Optional<UserAccount> authenticateDemoUser(String username, String password) {
+        if (username == null || password == null) {
+            return Optional.empty();
         }
 
-        return Optional.empty();
+        UserAccount account = userMap.get(username);
+        if (account == null || !BCrypt.checkpw(password, account.id())) {
+            return Optional.empty();
+        }
+        return Optional.of(account);
     }
 
     public static void authenticate(Context ctx) {
+        String username = ctx.formParam("username");
+        String password = ctx.formParam("password");
 
-        UsersController usersController = new UsersController();
+        Optional<UserAccount> demoAccount = authenticateDemoUser(username, password);
+        if (demoAccount.isPresent()) {
+            ctx.cookieStore().set("username", username);
+            ctx.cookieStore().set("user-role", demoAccount.get().role().name());
+            ctx.redirect("/accounts");
+            return;
+        }
 
-	String username = ctx.formParam("username");
-	String password = ctx.formParam("password");
+        if (username != null && password != null) {
+            User user = new UsersController().authenticateUser(ctx, username, password);
+            if (user != null) {
+                ctx.cookieStore().set("username", user.getUsername());
+                ctx.cookieStore().set("user-role", user.getRole());
+                ctx.redirect("/accounts");
+                return;
+            }
+        }
 
-	User user = usersController.authenticateUser(ctx, username, password);
-
-	if(user != null) {
-		ctx.cookieStore().set("username", user.getUsername());
-		ctx.cookieStore().set("user-role", user.getRole());
-		ctx.redirect("/accounts");
-	}
-	else {
-		ctx.cookieStore().clear();
-		ctx.redirect("/unauthorized.html");
-	}
+        ctx.cookieStore().clear();
+        ctx.redirect("/unauthorized.html");
     }
 
     public static void logout(Context ctx) {
