@@ -1,9 +1,6 @@
 package edu.cwi;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-
-import java.math.BigDecimal;
 
 import org.junit.Test;
 
